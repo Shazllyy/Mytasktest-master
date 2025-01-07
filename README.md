@@ -62,6 +62,16 @@ Make sure the connection string reflects the actual database server and credenti
 
 ---
 
+## 🔑 Login Details
+
+After running the Angular app and the backend server, you can log in using the following credentials:
+
+- **Username**: Admin
+- **Password**: P@ssw0rd
+
+These credentials are for local development use.
+
+---
 
 ## 📋 Summary of Steps
 
@@ -69,6 +79,9 @@ Make sure the connection string reflects the actual database server and credenti
 2. 📥 Install dependencies using `npm install`.
 3. 🚀 Start the development server with `ng serve`.
 4. 🗂 Run the **SQL** scripts in **SQL Server 2022**.
-5. 🔧 Update the **connection string** in `appsettings.json` to match your database credentials
+5. 🔧 Update the **connection string** in `appsettings.json` to match your database credentials.
+6. 🔑 Log in using **Username: Admin** and **Password: P@ssw0rd**.
+
+---
 
 **Happy Coding!** 🎉
