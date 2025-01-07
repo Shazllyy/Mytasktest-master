@@ -1,0 +1,77 @@
+-- Step 1: Create the Database
+CREATE DATABASE Taskinterview4;
+GO
+
+-- Step 2: Use the newly created database
+USE Taskinterview4;
+GO
+
+-- Step 3: Create Tables
+
+-- Table for ActivityLog
+CREATE TABLE ActivityLogs (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    ActivityType NVARCHAR(MAX),
+    Description NVARCHAR(MAX),
+    Timestamp DATETIME
+);
+
+-- Table for Category
+CREATE TABLE Categories (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Name NVARCHAR(50) NOT NULL,
+    Description NVARCHAR(200),
+    ParentCategoryId UNIQUEIDENTIFIER,
+    Status INT NOT NULL,  -- Assuming CategoryStatus is stored as an INT
+    CreatedDate DATETIME NOT NULL DEFAULT GETUTCDATE(),
+    UpdatedDate DATETIME NOT NULL DEFAULT GETUTCDATE()
+);
+
+-- Table for Product
+CREATE TABLE Products (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(500) NOT NULL,
+    Price DECIMAL(18, 2) NOT NULL CHECK (Price > 0),
+    CategoryId UNIQUEIDENTIFIER NOT NULL,
+    Status INT NOT NULL,  -- Assuming ProductStatus is stored as an INT
+    StockQuantity INT NOT NULL CHECK (StockQuantity >= 0),
+    ImageUrl NVARCHAR(MAX),
+    CreatedDate DATETIME NOT NULL DEFAULT GETUTCDATE(),
+    UpdatedDate DATETIME NOT NULL DEFAULT GETUTCDATE(),
+    FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
+);
+
+-- Table for Role
+CREATE TABLE Roles (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    Name NVARCHAR(MAX) NOT NULL
+);
+
+-- Table for User
+CREATE TABLE [Users] (
+    Id UNIQUEIDENTIFIER PRIMARY KEY,
+    UserName NVARCHAR(MAX) NOT NULL,
+    PasswordHash NVARCHAR(MAX) NOT NULL,
+    RoleId UNIQUEIDENTIFIER NOT NULL,
+    FOREIGN KEY (RoleId) REFERENCES Roles(Id)
+);
+
+-- Step 4: Insert Role (Admin)
+INSERT INTO Roles (Id, Name)
+VALUES (NEWID(), 'Admin');
+GO
+
+-- Step 5: Insert User (Admin) with Password
+
+-- Retrieve Admin role ID
+DECLARE @AdminRoleId UNIQUEIDENTIFIER;
+SELECT @AdminRoleId = Id FROM Roles WHERE Name = 'Admin';
+
+-- Hash the password "P@ssw0rd"
+DECLARE @PasswordHash NVARCHAR(MAX) = CONVERT(NVARCHAR(MAX), HASHBYTES('SHA2_256', 'P@ssw0rd'), 1);
+
+-- Insert Admin user
+INSERT INTO [Users] (Id, UserName, PasswordHash, RoleId)
+VALUES (NEWID(), 'Admin', 'P@ssw0rd', @AdminRoleId);
+GO
